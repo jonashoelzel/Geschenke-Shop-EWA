@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Artikel Bestände ändern</title>
+  <!-- Einbindung von Vue.js über CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h1>Artikel Übersicht</h1>
+    <div v-for="article in articles" :key="article.ProduktID" style="margin-bottom: 1em;">
+      <div>
+        <strong>{{ article.Produkttitel }}</strong><br>
+        Lagerbestand: {{ article.Lagerbestand }}
+      </div>
+      <div>
+        <button @click="decrement(article)">-</button>
+        <button @click="increment(article)">+</button>
+      </div>
+    </div>
+    <button @click="confirmUpdate">Bestände bestätigen</button>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        articles: []
+      },
+      created() {
+        this.loadArticles();
+      },
+      methods: {
+        loadArticles() {
+          // Simulierte API-Antwort; hier würden Sie später Ihre echte API-Aufruflogik einfügen
+          this.articles = [
+            {"ProduktID":"1","Produktcode":"PHP1","Produkttitel":"Einf\u00fchrung in PHP 8.0 - Teil 1 ","Autorname":"Max Mustermann","Verlagsname":"Spring verlag ","PreisNetto":"100.0000","Mwstsatz":"7.0000","PreisBrutto":"107.0000","Lagerbestand":"100","Kurzinhalt":"super Einf\u00fchrung in PHP 8.0 .. ","Gewicht":"1500","LinkGrafikdatei":""},
+            {"ProduktID":"3","Produktcode":"PHP2","Produkttitel":"Einf\u00fchrung in PHP 8.0 - Teil 2","Autorname":"Max Mustermann","Verlagsname":"Spring verlag ","PreisNetto":"200.0000","Mwstsatz":"7.0000","PreisBrutto":"214.0000","Lagerbestand":"50","Kurzinhalt":"super Einf\u00fchrung in PHP 8.0 .. ","Gewicht":"1500","LinkGrafikdatei":""},
+            {"ProduktID":"4","Produktcode":"PHP3","Produkttitel":"Einf\u00fchrung in PHP 8.0 - Teil 3","Autorname":"Max Mustermann","Verlagsname":"Spring verlag ","PreisNetto":"200.0000","Mwstsatz":"7.0000","PreisBrutto":"214.0000","Lagerbestand":"50","Kurzinhalt":"super Einf\u00fchrung in PHP 8.0 .. ","Gewicht":"1500","LinkGrafikdatei":""},
+            {"ProduktID":"5","Produktcode":"JAVA1","Produkttitel":"Einf\u00fchrung in JAVA ","Autorname":"Max Mustermann","Verlagsname":"DPUNKT Verlag ","PreisNetto":"200.0000","Mwstsatz":"7.0000","PreisBrutto":"214.0000","Lagerbestand":"50","Kurzinhalt":"super Einf\u00fchrung in JAVA .. ","Gewicht":"1500","LinkGrafikdatei":""}
+          ];
+        },
+        increment(article) {
+          // Erhöhe den Lagerbestand
+          article.Lagerbestand = parseInt(article.Lagerbestand) + 1;
+        },
+        decrement(article) {
+          // Verringere den Lagerbestand, aber nicht unter 0
+          let neuerWert = parseInt(article.Lagerbestand) - 1;
+          if (neuerWert < 0) neuerWert = 0;
+          article.Lagerbestand = neuerWert;
+        },
+        confirmUpdate() {
+          // Hier würden Sie die aktualisierten Artikel an Ihre Datenbank senden
+          console.log('Aktualisierte Artikeldaten:', this.articles);
+          // Implementieren Sie hier den API-Aufruf, um die Bestände zu bestätigen.
+        }
+      }
+    });
+  </script>
+</body>
+</html>
