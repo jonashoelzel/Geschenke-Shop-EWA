@@ -95,8 +95,29 @@
           article.amount--;
           this.calculateTotalAmount();
         },
-        payment() {
-          alert("Bezahlen");
+           payment() {
+          fetch('create_checkout_session.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              cart: this.articlesInCart
+            }),
+          })
+            .then(response => response.json())
+            .then(data => {
+              if (data.id) {
+                const stripe = Stripe('pk_test_51QU6m7KaPZs8yxC8TyVsHez6Vg2jh0k9S3vKEcXKR1WxmlqWt109UItAYzHV4233UfzfMr5PtT9poQ8ZIBYpN5tx001X6LSdYJ');
+                stripe.redirectToCheckout({ sessionId: data.id });
+              } else {
+                alert('Fehler bei der Bezahlung: ' + data.error);
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('Fehler bei der Bezahlung.');
+            });
         }
       }
     });
