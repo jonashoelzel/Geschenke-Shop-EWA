@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Geschenke Shop</title>
+  <!-- Einbindung von Vue.js über CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <!-- Einbindung von Font Awesome für das Cart-Icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <!-- Custom Stylesheets -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <button class="cart-button" onclick="window.location.href='shop_page.html'">
+    <i class="fas fa-arrow-left"></i> Zurück zum Shop
+  </button>
+  <div id="app">
+    <h1>Warenkorb</h1>
+    <table class="table" style="width: 100%; text-align: center;">
+      <thead>
+        <tr>
+          <th style="width: 33.33%; padding-bottom: 10px;">Artikel</th>
+          <th style="width: 33.33%; padding-bottom: 10px;">Anzahl</th>
+          <th style="width: 33.33%; padding-bottom: 10px;">Preis</th>
+        </tr>
+      </thead>
+      <tr>
+        <td colspan="3" style="border-bottom: 1px solid #a3a3a3;"></td>
+      <tr>
+        <td colspan="3" style="height: 10px;"></td>
+      </tr>
+      </tr>
+      <tbody>
+        <tr v-for="article in articlesInCart" :key="article.ProduktID">
+          <td style="width: 33.33%; text-align: center;">{{ article.Produkttitel }}</td>
+          <td style="width: 33.33%; text-align: center;">
+            <button class="btn-increase" @click="decreaseArticleAmount(article)">
+              <template v-if="article.amount > 1">-</template>
+              <template v-else><i class="fas fa-trash"></i></template>
+            </button>
+            {{ article.amount }}
+            <button class="btn-decrease" @click="increaseArticleAmount(article)">+</button>
+          </td>
+          <td style="width: 33.33%; text-align: center;">{{ (article.amount * article.PreisBrutto).toFixed(2) }} €</td>
+        </tr>
+        <tr></tr>
+        <td colspan="0" style="width: 33.33%; text-align: center; padding-top: 15px;">
+          <strong>Gesamtbetrag:</strong>
+        </td>
+        <td colspan="1" style="width: 33.33%; text-align: center; padding-top: 15px;"></td>
+
+        <td colspan="2" style="width: 33.33%; text-align: center; padding-top: 15px;">
+          <strong>{{ totalAmount.toFixed(2)}} €</strong></td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="text-align: center; margin-top: 30px;">
+      <button class="btn-increase" style="width: auto; padding: 10px 20px;" @click="payment">
+        Bezahlen
+      </button>
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        articlesInCart: [],
+        totalAmount: 0
+      },
+      created() {
+        this.loadArticles();
+      },
+      methods: {
+        loadArticles() {
+          // Simulierte API-Antwort; hier würden Sie später Ihre echte API-Aufruflogik einfügen
+          this.articlesInCart = [
+            { "ProduktID": "1", "Produktcode": "PHP1", "amount": 1, "Produkttitel": "Einf\u00fchrung in PHP 8.0 - Teil 1 ", "Autorname": "Max Mustermann", "Verlagsname": "Spring verlag ", "PreisNetto": "100.0000", "Mwstsatz": "7.0000", "PreisBrutto": "107.0000", "Lagerbestand": "100", "Kurzinhalt": "super Einf\u00fchrung in PHP 8.0 .. ", "Gewicht": "1500", "LinkGrafikdatei": "https://1techpc.de/wp-content/uploads/2023/06/einfuehrung-in-die-webentwicklung-mit-php-und-mysql-1.png?v=1687182850" },
+            { "ProduktID": "3", "Produktcode": "PHP2", "amount": 3, "Produkttitel": "Einf\u00fchrung in PHP 8.0 - Teil 2", "Autorname": "Max Mustermann", "Verlagsname": "Spring verlag ", "PreisNetto": "200.0000", "Mwstsatz": "7.0000", "PreisBrutto": "214.0000", "Lagerbestand": "50", "Kurzinhalt": "super Einf\u00fchrung in PHP 8.0 .. ", "Gewicht": "1500", "LinkGrafikdatei": "" },
+            { "ProduktID": "4", "Produktcode": "PHP3", "amount": 5, "Produkttitel": "Einf\u00fchrung in PHP 8.0 - Teil 3", "Autorname": "Max Mustermann", "Verlagsname": "Spring verlag ", "PreisNetto": "200.0000", "Mwstsatz": "7.0000", "PreisBrutto": "214.0000", "Lagerbestand": "50", "Kurzinhalt": "super Einf\u00fchrung in PHP 8.0 .. ", "Gewicht": "1500", "LinkGrafikdatei": "" },
+            { "ProduktID": "5", "Produktcode": "JAVA1", "amount": 0, "Produkttitel": "Einf\u00fchrung in JAVA ", "Autorname": "Max Mustermann", "Verlagsname": "DPUNKT Verlag ", "PreisNetto": "200.0000", "Mwstsatz": "7.0000", "PreisBrutto": "214.0000", "Lagerbestand": "50", "Kurzinhalt": "super Einf\u00fchrung in JAVA .. ", "Gewicht": "1500", "LinkGrafikdatei": "" }
+          ].filter(article => article.amount > 0);
+          this.calculateTotalAmount();
+        },
+        calculateTotalAmount() {
+          this.totalAmount = this.articlesInCart.reduce((sum, article) => sum + article.amount * article.PreisBrutto, 0);
+        },
+        increaseArticleAmount(article) {
+          article.amount++;
+          this.calculateTotalAmount();
+        },
+        decreaseArticleAmount(article) {
+          article.amount--;
+          this.calculateTotalAmount();
+        },
+        payment() {
+          alert("Bezahlen");
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+.cart-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.cart-button i {
+    margin-right: 5px;
+}
+
+.btn-increase,
+.btn-decrease {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    width: 30px;
+    cursor: pointer;
+}
+
+.btn-increase:hover,
+.btn-decrease:hover {
+    background-color: #5fa6f3;
+}
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}

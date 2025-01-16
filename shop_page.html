@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Geschenke Shop</title>
+  <!-- Einbindung von Vue.js über CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <!-- Einbindung von Font Awesome für das Cart-Icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <button class="cart-button" style="right: 150px;" onclick="window.location.href='admin_page.html'">
+    <i class="fas fa-user-shield"></i> Admin
+  </button>
+  <button class="cart-button" onclick="window.location.href='shopping_cart_page.html'">
+    <i class="fas fa-shopping-cart"></i> Warenkorb
+  </button>
+  <div id="app">
+    <h1>Shop</h1>
+    <!-- Search input field -->
+    <input type="text" v-model="searchQuery" placeholder="Suche nach Artikeln..."
+      style="margin-bottom: 1em; padding: 10px; width: 100%; max-width: 300px;"
+      @input="updateFilteredArticles(searchQuery)">
+    <div v-for="article in filteredArticles" :key="article.ProduktID" style="margin-bottom: 1em;">
+      <div>
+        <img :src="article.LinkGrafikdatei" style="width: 150px; height: 150px;">
+        <br>
+        <strong>{{ article.Produkttitel }}</strong><br>
+        Lagerbestand: {{ article.Lagerbestand }}<br>
+        Preis: {{ Number(article.PreisBrutto).toFixed(2) }} €
+      </div>
+      <div>
+        <button @click="addToCard(article, 1)"
+          style="background-color: #007bff; color: white; border: none; border-radius: 5px; padding: 10px 15px; cursor: pointer;">
+          Zum Warenkorb hinzufügen
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        articles: [],
+        filteredArticles: []
+      },
+      created() {
+        this.loadArticles();
+      },
+      methods: {
+        loadArticles() {
+          // Simulierte API-Antwort; hier würden Sie später Ihre echte API-Aufruflogik einfügen
+          this.filteredArticles = this.articles = [
+            { "ProduktID": "1", "Produktcode": "PHP1", "Produkttitel": "Einf\u00fchrung in PHP 8.0 - Teil 1 ", "Autorname": "Max Mustermann", "Verlagsname": "Spring verlag ", "PreisNetto": "100.0000", "Mwstsatz": "7.0000", "PreisBrutto": "107.0000", "Lagerbestand": "100", "Kurzinhalt": "super Einf\u00fchrung in PHP 8.0 .. ", "Gewicht": "1500", "LinkGrafikdatei": "https://1techpc.de/wp-content/uploads/2023/06/einfuehrung-in-die-webentwicklung-mit-php-und-mysql-1.png?v=1687182850" },
+            { "ProduktID": "3", "Produktcode": "PHP2", "Produkttitel": "Einf\u00fchrung in PHP 8.0 - Teil 2", "Autorname": "Max Mustermann", "Verlagsname": "Spring verlag ", "PreisNetto": "200.0000", "Mwstsatz": "7.0000", "PreisBrutto": "214.0000", "Lagerbestand": "50", "Kurzinhalt": "super Einf\u00fchrung in PHP 8.0 .. ", "Gewicht": "1500", "LinkGrafikdatei": "" },
+            { "ProduktID": "4", "Produktcode": "PHP3", "Produkttitel": "Einf\u00fchrung in PHP 8.0 - Teil 3", "Autorname": "Max Mustermann", "Verlagsname": "Spring verlag ", "PreisNetto": "200.0000", "Mwstsatz": "7.0000", "PreisBrutto": "214.0000", "Lagerbestand": "50", "Kurzinhalt": "super Einf\u00fchrung in PHP 8.0 .. ", "Gewicht": "1500", "LinkGrafikdatei": "" },
+            { "ProduktID": "5", "Produktcode": "JAVA1", "Produkttitel": "Einf\u00fchrung in JAVA ", "Autorname": "Max Mustermann", "Verlagsname": "DPUNKT Verlag ", "PreisNetto": "200.0000", "Mwstsatz": "7.0000", "PreisBrutto": "214.0000", "Lagerbestand": "50", "Kurzinhalt": "super Einf\u00fchrung in JAVA .. ", "Gewicht": "1500", "LinkGrafikdatei": "" }
+          ];
+        },
+        updateFilteredArticles(searchQuery) {
+          // Filter articles based on search query
+          this.filteredArticles = this.articles.filter(article =>
+            article.Produkttitel.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+        },
+        addToCard(article, amount) {
+          // Add article to shopping cart
+          console.log('Adding article to shopping cart:', article, 'Amount:', amount);
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
