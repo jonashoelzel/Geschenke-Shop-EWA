@@ -89,10 +89,12 @@
         },
         increaseArticleAmount(article) {
           article.amount++;
+          this.articlesInCart = this.articlesInCart.filter(article => article.amount > 0);
           this.calculateTotalAmount();
         },
         decreaseArticleAmount(article) {
           article.amount--;
+          this.articlesInCart = this.articlesInCart.filter(article => article.amount > 0);
           this.calculateTotalAmount();
         },
            payment() {
