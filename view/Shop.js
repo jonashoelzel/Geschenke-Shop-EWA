@@ -20,7 +20,7 @@ export default {
         <img :src="article.LinkGrafikdatei" style="width: 150px; height: 150px;">
         <br>
         <strong>{{ article.Produkttitel }}</strong><br>
-        Lagerbestand: {{ article.Lagerbestand }}<br>
+        {{ article.Kurzinhalt }}<br>
         Preis: {{ Number(article.PreisBrutto).toFixed(2) }} €
       </div>
       <div>

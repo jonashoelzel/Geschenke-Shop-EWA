@@ -56,8 +56,6 @@ const store = createStore({
                     amount: state._articlesInCartMap.get(article.ProduktID)
                 }));
 
-            console.log(articlesInCart.reduce((sum, article) => sum + article.amount * article.PreisBrutto, 0));
-
             return articlesInCart;
         }
     }

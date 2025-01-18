@@ -10,21 +10,20 @@ export default {
     <table class="table" style="width: 100%; text-align: center;">
       <thead>
         <tr>
-          <th style="width: 33.33%; padding-bottom: 10px;">Artikel</th>
-          <th style="width: 33.33%; padding-bottom: 10px;">Anzahl</th>
-          <th style="width: 33.33%; padding-bottom: 10px;">Preis</th>
+          <th style="width: 40%; padding-bottom: 10px;">Artikel</th>
+          <th style="width: 15%; padding-bottom: 10px;">Anzahl</th>
+          <th style="width: 15%; padding-bottom: 10px;">Preis Netto</th>
+          <th style="width: 15%; padding-bottom: 10px;">MwSt</th>
+          <th style="width: 15%; padding-bottom: 10px;">Preis Brutto</th>
         </tr>
       </thead>
       <tr>
-        <td colspan="3" style="border-bottom: 1px solid #a3a3a3;"></td>
-      <tr>
-        <td colspan="3" style="height: 10px;"></td>
-      </tr>
+        <td colspan="5" style="padding-bottom: 10px; border-bottom: 1px solid #a3a3a3;"></td>
       </tr>
       <tbody>
         <tr v-for="article in getArticlesInCart" :key="article.ProduktID">
-          <td style="width: 33.33%; text-align: center;">{{ article.Produkttitel }}</td>
-          <td style="width: 33.33%; text-align: center;">
+          <td style="text-align: center;">{{ article.Produkttitel }}</td>
+          <td style="text-align: center;">
             <button class="btn-increase" @click="removeOneFromCart(article.ProduktID)">
               <template v-if="article.amount > 1">-</template>
               <template v-else><i class="fas fa-trash"></i></template>
@@ -32,16 +31,23 @@ export default {
             {{ article.amount }}
             <button class="btn-decrease" @click="addOneToCart(article.ProduktID)">+</button>
           </td>
-          <td style="width: 33.33%; text-align: center;">{{ (article.amount * article.PreisBrutto).toFixed(2) }} €</td>
+          <td style="text-align: center;">{{ (article.amount * article.PreisNetto).toFixed(2) }} €</td>
+          <td style="text-align: center;">{{ (article.amount * this.mwstOfArticle(article)).toFixed(2) }} €</td>
+          <td style="text-align: center;">{{ (article.amount * article.PreisBrutto).toFixed(2) }} €</td>
         </tr>
         <tr></tr>
-        <td colspan="0" style="width: 33.33%; text-align: center; padding-top: 15px;">
+        <td colspan="0" style="text-align: center; padding-top: 15px;">
           <strong>Gesamtbetrag:</strong>
         </td>
-        <td colspan="1" style="width: 33.33%; text-align: center; padding-top: 15px;"></td>
-
-        <td colspan="2" style="width: 33.33%; text-align: center; padding-top: 15px;">
-          <strong>{{ sumOfArticlesInCart.toFixed(2)}} €</strong>
+        <td colspan="1" style="text-align: center; padding-top: 15px;"></td>
+        <td colspan="1" style="text-align: center; padding-top: 15px;">
+          {{ sumNettoOfArticlesInCart.toFixed(2) }} €
+        </td>
+        <td colspan="1" style="text-align: center; padding-top: 15px;">
+          {{ sumMwstOfArticlesInCart.toFixed(2) }} €
+        </td>
+        <td colspan="1" style="text-align: center; padding-top: 15px;">
+          <strong>{{ sumBruttoOfArticlesInCart.toFixed(2)}} €</strong>
         </td>
         </tr>
       </tbody>
@@ -52,13 +58,23 @@ export default {
       </button>
     </div>
     `,
-  computed: { ...mapGetters(['getArticlesInCart']), 
-    sumOfArticlesInCart() {
+  computed: {
+    ...mapGetters(['getArticlesInCart']),
+    sumNettoOfArticlesInCart() {
+      return this.$store.getters.getArticlesInCart.reduce((sum, article) => sum + article.amount * article.PreisNetto, 0);
+    },
+    sumMwstOfArticlesInCart() {
+      return this.$store.getters.getArticlesInCart.reduce((sum, article) => sum + article.amount * this.mwstOfArticle(article), 0);
+    },
+    sumBruttoOfArticlesInCart() {
       return this.$store.getters.getArticlesInCart.reduce((sum, article) => sum + article.amount * article.PreisBrutto, 0);
-    }
+    },
   },
   methods: {
     ...mapMutations(['addOneToCart', 'removeOneFromCart']),
+    mwstOfArticle(article) {
+      return article.Mwstsatz / 100 * article.PreisNetto;
+    },
     payment() {
       fetch('create_checkout_session.php', {
         method: 'POST',
