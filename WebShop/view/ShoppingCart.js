@@ -1,4 +1,4 @@
-import { mapMutations, mapGetters } from 'vuex'
+import { mapMutations, mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'ShoppingCart',
@@ -21,19 +21,19 @@ export default {
         <td colspan="5" style="padding-bottom: 10px; border-bottom: 1px solid #a3a3a3;"></td>
       </tr>
       <tbody>
-        <tr v-for="article in getArticlesInCart" :key="article.ProduktID">
-          <td style="text-align: center;">{{ article.Produkttitel }}</td>
+        <tr v-for="article in getArticlesInCart" :key="article.prodID">
+          <td style="text-align: center;">{{ article.titel }}</td>
           <td style="text-align: center;">
-            <button class="btn-increase" @click="removeOneFromCart(article.ProduktID)">
+            <button class="btn-increase" @click="removeOneFromCart(article.prodID)">
               <template v-if="article.amount > 1">-</template>
               <template v-else><i class="fas fa-trash"></i></template>
             </button>
             {{ article.amount }}
-            <button class="btn-decrease" @click="addOneToCart(article.ProduktID)">+</button>
+            <button class="btn-decrease" @click="addOneToCart(article.prodID)">+</button>
           </td>
-          <td style="text-align: center;">{{ (article.amount * article.PreisNetto).toFixed(2) }} €</td>
-          <td style="text-align: center;">{{ (article.amount * this.mwstOfArticle(article)).toFixed(2) }} €</td>
-          <td style="text-align: center;">{{ (article.amount * article.PreisBrutto).toFixed(2) }} €</td>
+          <td style="text-align: center;">{{ (article.amount * article.preis).toFixed(2) }} €</td>
+          <td style="text-align: center;">{{ (article.amount * article.preis * MwStSatz).toFixed(2) }} €</td>
+          <td style="text-align: center;">{{ (article.amount * article.preis * (1 + MwStSatz)).toFixed(2) }} €</td>
         </tr>
         <tr></tr>
         <td colspan="0" style="text-align: center; padding-top: 15px;">
@@ -58,23 +58,22 @@ export default {
       </button>
     </div>
     `,
+  
   computed: {
+    ...mapState(['MwStSatz']),
     ...mapGetters(['getArticlesInCart']),
     sumNettoOfArticlesInCart() {
-      return this.$store.getters.getArticlesInCart.reduce((sum, article) => sum + article.amount * article.PreisNetto, 0);
+      return this.$store.getters.getArticlesInCart.reduce((sum, article) => sum + article.amount * article.preis, 0);
     },
     sumMwstOfArticlesInCart() {
-      return this.$store.getters.getArticlesInCart.reduce((sum, article) => sum + article.amount * this.mwstOfArticle(article), 0);
+      return this.$store.getters.getArticlesInCart.reduce((sum, article) => sum + article.amount * article.preis * this.MwStSatz, 0);
     },
     sumBruttoOfArticlesInCart() {
-      return this.$store.getters.getArticlesInCart.reduce((sum, article) => sum + article.amount * article.PreisBrutto, 0);
+      return this.$store.getters.getArticlesInCart.reduce((sum, article) => sum + article.amount * article.preis * (1 + this.MwStSatz), 0);
     },
   },
   methods: {
     ...mapMutations(['addOneToCart', 'removeOneFromCart']),
-    mwstOfArticle(article) {
-      return article.Mwstsatz / 100 * article.PreisNetto;
-    },
     payment() {
       fetch('create_checkout_session.php', {
         method: 'POST',

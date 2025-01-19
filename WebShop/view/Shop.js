@@ -15,16 +15,16 @@ export default {
     <input type="text" v-model="searchQuery" placeholder="Suche nach Artikeln..."
       style="margin-bottom: 1em; padding: 10px; width: 100%; max-width: 300px;"
       @input="onSearchQueryChange(searchQuery)">
-    <div v-for="article in articlesFiltered" :key="article.ProduktID" style="margin-bottom: 1em;">
+    <div v-for="article in articlesFiltered" :key="article.prodID" style="margin-bottom: 1em;">
       <div>
-        <img :src="article.LinkGrafikdatei" style="width: 150px; height: 150px;">
+        <img :src="article.bild" style="width: 150px; height: 150px;">
         <br>
-        <strong>{{ article.Produkttitel }}</strong><br>
-        {{ article.Kurzinhalt }}<br>
-        Preis: {{ Number(article.PreisBrutto).toFixed(2) }} €
+        <strong>{{ article.titel }}</strong><br>
+        {{ article.beschreibung }}<br>
+        Preis: {{ (Number(article.preis) * (1 + MwStSatz)).toFixed(2) }} €
       </div>
       <div>
-        <button @click="addOneToCart(article.ProduktID)"
+        <button @click="addOneToCart(article.prodID)"
           style="background-color: #007bff; color: white; border: none; border-radius: 5px; padding: 10px 15px; cursor: pointer;">
           Zum Warenkorb hinzufügen
         </button>
@@ -35,7 +35,7 @@ export default {
   created() {
     this.fetchArticles();
   },
-  computed: mapState(['articlesFiltered']),
+  computed: mapState(['articlesFiltered', 'MwStSatz']),
   methods: {
     ...mapMutations(['fetchArticles', 'onSearchQueryChange', 'addOneToCart'])
   }
