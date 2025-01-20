@@ -1,4 +1,5 @@
 import { mapState, mapMutations } from 'vuex';
+import putBestand from '../apis/put_bestand.js';
 
 export default {
   name: 'Admin',
@@ -31,9 +32,18 @@ export default {
       if (neuerWert < 0) neuerWert = 0;
       article.Lagerbestand = neuerWert;
     },
-    confirmUpdate() {
+    async confirmUpdate() {
       console.log('Aktualisierte Artikeldaten:', this.articlesAll);
-      // Implementieren Sie hier den API-Aufruf, um die Bestände zu bestätigen.
+      for (const article of this.articlesAll) {
+        try {
+          const result = await putBestand(article.prodID, article.Lagerbestand);
+          if (!result.success) {
+            console.error(`Fehler beim Aktualisieren des Bestands für Artikel ${article.prodID}: ${result.message}`);
+          }
+        } catch (error) {
+          console.error(`Fehler beim Aktualisieren des Bestands für Artikel ${article.prodID}:`, error);
+        }
+      }
     },
     async validateAdmin() {
       try {
