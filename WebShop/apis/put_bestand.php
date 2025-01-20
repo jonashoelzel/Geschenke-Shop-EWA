@@ -27,11 +27,18 @@ if (!isset($input['id']) || !isset($input['menge'])) {
 $id = $input['id'];
 $menge = $input['menge'];
 
-// aktualisierung menge
-$sql = "UPDATE produkt SET menge = $menge WHERE prodID = $id";
-$result = $conn->query($sql);
+// Aktualisierung der Menge
+$sql = "UPDATE produkt SET bestand = ? WHERE prodID = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ii", $menge, $id);
 
-// Erfolgsnachricht zurückgeben
-echo json_encode(['success' => true]);
+if ($stmt->execute()) {
+    echo json_encode(['success' => true]);
+} else {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Fehler beim Aktualisieren des Bestands.']);
+}
 
+$stmt->close();
+$conn->close();
 ?>
