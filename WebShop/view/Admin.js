@@ -40,7 +40,7 @@ export default {
         const token = localStorage.getItem('token');
         if (!token) {
           alert('You must be logged in to access this page.');
-          window.location.href = '/login';
+          this.$router.push('/login');
           return;
         }
 
@@ -55,12 +55,12 @@ export default {
         console.log('Admin validation response:', data);
         if (!data.isAdmin) {
           alert('You do not have permission to access this page.');
-          window.location.href = '/';
+          this.$router.push('/');
         }
       } catch (error) {
         console.error('Error validating admin:', error);
         alert('An error occurred while validating your permissions.');
-        window.location.href = '/';
+        this.$router.push('/');
       }
     }
   },
