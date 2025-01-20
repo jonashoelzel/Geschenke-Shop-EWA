@@ -10,6 +10,7 @@ const store = createStore({
             articlesAll: [],
             _articlesInCartMap: new Map(),
             MwStSatz: 0.07,
+            user: null, // Add user to the state
         }
     },
     mutations: {
@@ -22,8 +23,8 @@ const store = createStore({
                     console.log("Error fetching articles. Loading default articles.");
 
                     state.articlesFiltered = state.articlesAll = [
-                        { "prodID": "00000", "titel": "Smiley Lampe", "beschreibung": "Süß, aber irgendwie auch bissl creepy – leuchtet dein Zimmer aus und schaut dir dabei direkt in die ", "hersteller": "FunFlow", "bild": "https://i.ebayimg.com/images/g/gFgAAOSwCPZlZF~v/s-l1600.webp", "menge": "150", "preis": "19.99" },
-                        { "prodID": "00001", "titel": "Hausschuhe", "beschreibung": "Hausschuhe wie haarige Hobbit-Füße – flauschig, witzig und der ultimative Style für daheim!", "hersteller": "dm", "bild": "https://i.ebayimg.com/images/g/qj0AAOSwySNgJXzK/s-l1200.jpg", "menge": "70", "preis": "15.99" }
+                        { "prodID": "00000", "titel": "Smiley Lampe", "beschreibung": "Süß, aber irgendwie auch bissl creepy – leuchtet dein Zimmer aus und schaut dir dabei direkt in die ", "hersteller": "FunFlow", "bild": "https://i.ebayimg.com/images/g/gFgAAOSwCPZlZF~v/s-l1600.webp", "bestand": "150", "preis": "19.99" },
+                        { "prodID": "00001", "titel": "Hausschuhe", "beschreibung": "Hausschuhe wie haarige Hobbit-Füße – flauschig, witzig und der ultimative Style für daheim!", "hersteller": "dm", "bild": "https://i.ebayimg.com/images/g/qj0AAOSwySNgJXzK/s-l1200.jpg", "bestand": "70", "preis": "15.99" }
                     ];
                 }
             });
@@ -55,6 +56,12 @@ const store = createStore({
                 state._articlesInCartMap.set(productID, state._articlesInCartMap.get(productID) - 1);
             }
         },
+        setUser(state, user) {
+            state.user = user;
+        },
+        clearUser(state) {
+            state.user = null;
+        },
     },
     getters: {
         getArticlesInCart(state) {
@@ -66,6 +73,9 @@ const store = createStore({
                 }));
 
             return articlesInCart;
+        },
+        getUser(state) {
+            return state.user;
         }
     }
 });

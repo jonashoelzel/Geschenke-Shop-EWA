@@ -5,8 +5,11 @@ export default {
   template: String.raw`
     <div>
     <h1>Shop</h1>
-    <button class="cart-button" style="right: 150px;" @click="$router.push('/admin')">
+    <button v-if="isAdmin" class="cart-button" style="right: 250px;" @click="$router.push('/admin')">
       <i class="fas fa-user-shield"></i> Admin
+    </button>
+    <button class="cart-button" style="right: 150px;" @click="$router.push('/login')">
+      <i class="fas fa-sign-in-alt"></i> Login
     </button>
     <button class="cart-button" @click="$router.push('/shopping-cart')">
       <i class="fas fa-shopping-cart"></i> Warenkorb
