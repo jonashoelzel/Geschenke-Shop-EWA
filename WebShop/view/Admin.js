@@ -25,12 +25,12 @@ export default {
   methods: {
     ...mapMutations(['fetchArticles']),
     increment(article) {
-      article.Lagerbestand = parseInt(article.Lagerbestand) + 1;
+      article.bestand = parseInt(article.bestand) + 1;
     },
     decrement(article) {
-      let neuerWert = parseInt(article.Lagerbestand) - 1;
+      let neuerWert = parseInt(article.bestand) - 1;
       if (neuerWert < 0) neuerWert = 0;
-      article.Lagerbestand = neuerWert;
+      article.bestand = neuerWert;
     },
     async confirmUpdate() {
       console.log('Aktualisierte Artikeldaten:', this.articlesAll);
