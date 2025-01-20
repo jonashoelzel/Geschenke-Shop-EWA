@@ -36,10 +36,7 @@ export default {
       console.log('Aktualisierte Artikeldaten:', this.articlesAll);
       for (const article of this.articlesAll) {
         try {
-          const result = await putBestand(article.prodID, article.Lagerbestand);
-          if (!result.success) {
-            console.error(`Fehler beim Aktualisieren des Bestands für Artikel ${article.prodID}: ${result.message}`);
-          }
+          await putBestand(article.prodID, article.bestand);
         } catch (error) {
           console.error(`Fehler beim Aktualisieren des Bestands für Artikel ${article.prodID}:`, error);
         }

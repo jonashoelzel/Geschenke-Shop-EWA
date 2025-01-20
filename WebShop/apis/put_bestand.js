@@ -1,6 +1,6 @@
 async function putBestand(prodID, menge) {
     try {
-        const response = await fetch('./apis/renew_bestand.php', {
+        const response = await fetch('./apis/put_bestand.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
