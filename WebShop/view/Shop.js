@@ -38,7 +38,12 @@ export default {
   created() {
     this.fetchArticles();
   },
-  computed: mapState(['articlesFiltered', 'MwStSatz']),
+  computed: {
+    ...mapState(['articlesFiltered', 'user', 'MwStSatz']),
+    isAdmin() {
+      return this.user && this.user.isAdmin;
+    }
+  },
   methods: {
     ...mapMutations(['fetchArticles', 'onSearchQueryChange', 'addOneToCart'])
   }
