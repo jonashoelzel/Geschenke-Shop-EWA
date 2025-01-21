@@ -6,6 +6,17 @@ export default {
   name: 'Admin',
   template: String.raw`
     <div class="container mt-5">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Admin Bereich</h1>
+        <div>
+          <button class="btn btn-secondary mr-2" @click="$router.push('/')">
+            <i class="fas fa-arrow-left"></i> Zurück zum Shop
+          </button>
+          <button class="btn btn-danger" @click="logout">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+      </div>
       <h1 class="mb-4">Artikel Übersicht</h1>
       <div v-for="article in articlesAll" :key="article.prodID" class="card mb-3">
         <div class="card-body">
@@ -25,7 +36,7 @@ export default {
     ...mapState(['articlesAll', 'user']),
   },
   methods: {
-    ...mapMutations(['fetchArticles']),
+    ...mapMutations(['fetchArticles', 'clearUser']),
     increment(article) {
       article.bestand = parseInt(article.bestand) + 1;
     },
@@ -45,7 +56,7 @@ export default {
       }
     },
     async createTestBestellung() {
-      const kundenID = 2; // Replace with actual customer ID
+      const kundenID = this.user.id; // Use the user ID from the state
       const preis = 100.00; // Replace with actual price
       const produkte = [
         { prodID: 1, menge: 2 },
@@ -53,7 +64,7 @@ export default {
       ];
 
       try {
-        const result = await createAndAddProductsToBestellung(kundenID, produkte);
+        const result = await createAndAddProductsToBestellung(kundenID, preis, produkte);
         if (result.success) {
           console.log('Bestellung erfolgreich erstellt und Produkte hinzugefügt:', result.bestellungID);
         } else {
@@ -62,6 +73,11 @@ export default {
       } catch (error) {
         console.error('Fehler beim Erstellen der Bestellung und Hinzufügen der Produkte:', error);
       }
+    },
+    logout() {
+      localStorage.removeItem('token');
+      this.clearUser();
+      this.$router.push('/login');
     },
     async validateAdmin() {
       try {

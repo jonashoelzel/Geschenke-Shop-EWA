@@ -3,7 +3,20 @@ import { mapState, mapMutations } from 'vuex';
 export default {
   name: 'Login',
   template: String.raw`
-    <div class="container mt-5">
+     <div class="container mt-5">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <button class="btn btn-secondary" @click="$router.push('/')">
+          <i class="fas fa-arrow-left"></i> Zurück zum Shop
+        </button>
+        <div>
+          <button v-if="user && user.isAdmin" class="btn btn-secondary mr-2" @click="$router.push('/admin')">
+            <i class="fas fa-user-shield"></i> Admin
+          </button>
+          <button class="btn btn-info" @click="$router.push('/shopping-cart')">
+            <i class="fas fa-shopping-cart"></i> Warenkorb
+          </button>
+        </div>
+      </div>
       <div class="row">
         <div class="col-md-6">
           <h2>Login</h2>
