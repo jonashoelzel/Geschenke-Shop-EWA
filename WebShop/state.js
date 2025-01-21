@@ -14,20 +14,18 @@ const store = createStore({
         }
     },
     mutations: {
-        fetchArticles(state) {
-            fetchProdukt().then(data => {
-                if (data != null) {
-                    state.articlesFiltered = state.articlesAll = data;
-                }
-                else {
-                    console.log("Error fetching articles. Loading default articles.");
+        async fetchArticles(state) {
+            const data = await fetchProdukt();
+            if (data != null) {
+                state.articlesFiltered = state.articlesAll = data;
+            } else {
+                console.log("Error fetching articles. Loading default articles.");
 
-                    state.articlesFiltered = state.articlesAll = [
-                        { "prodID": "00000", "titel": "Smiley Lampe", "beschreibung": "Süß, aber irgendwie auch bissl creepy – leuchtet dein Zimmer aus und schaut dir dabei direkt in die ", "hersteller": "FunFlow", "bild": "https://i.ebayimg.com/images/g/gFgAAOSwCPZlZF~v/s-l1600.webp", "bestand": "150", "preis": "19.99" },
-                        { "prodID": "00001", "titel": "Hausschuhe", "beschreibung": "Hausschuhe wie haarige Hobbit-Füße – flauschig, witzig und der ultimative Style für daheim!", "hersteller": "dm", "bild": "https://i.ebayimg.com/images/g/qj0AAOSwySNgJXzK/s-l1200.jpg", "bestand": "70", "preis": "15.99" }
-                    ];
-                }
-            });
+                state.articlesFiltered = state.articlesAll = [
+                    { "prodID": "00000", "titel": "Smiley Lampe", "beschreibung": "Süß, aber irgendwie auch bissl creepy – leuchtet dein Zimmer aus und schaut dir dabei direkt in die ", "hersteller": "FunFlow", "bild": "https://i.ebayimg.com/images/g/gFgAAOSwCPZlZF~v/s-l1600.webp", "bestand": "150", "preis": "19.99" },
+                    { "prodID": "00001", "titel": "Hausschuhe", "beschreibung": "Hausschuhe wie haarige Hobbit-Füße – flauschig, witzig und der ultimative Style für daheim!", "hersteller": "dm", "bild": "https://i.ebayimg.com/images/g/qj0AAOSwySNgJXzK/s-l1200.jpg", "bestand": "70", "preis": "15.99" }
+                ];
+            }
         },
         onSearchQueryChange(state, searchQuery) {
             state.articlesFiltered = state.articlesAll.filter(article =>

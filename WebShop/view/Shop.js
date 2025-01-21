@@ -77,12 +77,12 @@ export default {
     if (user) {
       this.$store.commit('setUser', JSON.parse(decodeURIComponent(user)));
     }
-
-    const brutto_price = this.$store.getters.getArticlesInCart.reduce((sum, article) => sum + article.amount * article.preis * (1 + this.$store.state.MwStSatz), 0);
-
+    
     if (paymentStatus === 'success') {
+      const cartProdukte = Array.from(this.$store.state._articlesInCartMap.entries()).map(([prodID, menge]) => ({ prodID, menge }));
+
+      await createAndAddProductsToBestellung(this.user.id, cartProdukte);
       // Show success message and clear cart
-      const result = await createAndAddProductsToBestellung(this.user.id, brutto_price, this.$store.getters.getArticlesInCart);
       this.$store.commit('clearCart');
       alert('Payment successful!');
     } else if (paymentStatus === 'cancelled') {
