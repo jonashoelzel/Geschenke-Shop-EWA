@@ -1,4 +1,4 @@
-async function putZahlung(kundenID, preis) {
+async function createBestellung(kundenID, preis) {
     try {
         // Anfrage an die PHP-Datei senden
         const response = await fetch('./apis/put_zahlung.php', {
@@ -25,4 +25,4 @@ async function putZahlung(kundenID, preis) {
     }
 }
 
-export default putZahlung;
+export default createBestellung;
