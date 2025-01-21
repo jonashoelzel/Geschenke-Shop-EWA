@@ -33,7 +33,7 @@ $email = $conn->real_escape_string($requestData['email']);
 $password = $requestData['password'];
 
 // Benutzer aus der Datenbank abrufen
-$stmt = $conn->prepare("SELECT id, username, password, is_admin FROM users WHERE email = ?");
+$stmt = $conn->prepare("SELECT kundenID, username, password, is_admin FROM kunde WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
