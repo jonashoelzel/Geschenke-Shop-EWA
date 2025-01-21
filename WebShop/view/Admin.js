@@ -1,5 +1,6 @@
 import { mapState, mapMutations } from 'vuex';
 import putBestand from '../apis/put_bestand.js';
+import createAndAddProductsToBestellung from '../apis/create_bestellung_and_add_products.js';
 
 export default {
   name: 'Admin',
@@ -17,6 +18,7 @@ export default {
         </div>
       </div>
       <button @click="confirmUpdate">Bestände bestätigen</button>
+      <button @click="createTestBestellung">Test Bestellung erstellen</button>
     </div>
   `,
   computed: {
@@ -40,6 +42,25 @@ export default {
         } catch (error) {
           console.error(`Fehler beim Aktualisieren des Bestands für Artikel ${article.prodID}:`, error);
         }
+      }
+    },
+    async createTestBestellung() {
+      const kundenID = 6; // Replace with actual customer ID
+      const preis = 100.00; // Replace with actual price
+      const produkte = [
+        { prodID: 1, menge: 2 },
+        { prodID: 2, menge: 1 }
+      ];
+
+      try {
+        const result = await createAndAddProductsToBestellung(kundenID, preis, produkte);
+        if (result.success) {
+          console.log('Bestellung erfolgreich erstellt und Produkte hinzugefügt:', result.bestellungID);
+        } else {
+          console.error('Fehler beim Erstellen der Bestellung und Hinzufügen der Produkte:', result.message);
+        }
+      } catch (error) {
+        console.error('Fehler beim Erstellen der Bestellung und Hinzufügen der Produkte:', error);
       }
     },
     async validateAdmin() {

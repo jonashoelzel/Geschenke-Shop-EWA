@@ -1,7 +1,7 @@
 async function createBestellung(kundenID, preis) {
     try {
         // Anfrage an die PHP-Datei senden
-        const response = await fetch('./apis/put_zahlung.php', {
+        const response = await fetch('./apis/create_bestellung.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
