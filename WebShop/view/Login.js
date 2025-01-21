@@ -75,6 +75,8 @@ export default {
         if (data.token) {
           localStorage.setItem('token', data.token);
           this.setUserFromToken();
+          alert('Benutzer erfolgreich erstellt!');
+          this.$router.push('/');
         }
 
         this.registerForm = {
@@ -106,6 +108,7 @@ export default {
         if (data.token) {
           localStorage.setItem('token', data.token);
           this.setUserFromToken();
+          this.$router.push('/');
         }
 
         this.loginForm = {
@@ -159,6 +162,9 @@ export default {
   },
   created() {
     this.setUserFromToken();
+    if (this.user) {
+      this.$router.push('/');
+    }
   },
   computed: {
     ...mapState(['user']),
