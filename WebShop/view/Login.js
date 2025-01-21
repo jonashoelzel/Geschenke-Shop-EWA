@@ -131,7 +131,7 @@ export default {
         }
 
         const user = {
-          kundenID: decodedToken.kundenID,
+          id: decodedToken.kundenID,
           username: decodedToken.username,
           email: decodedToken.email,
           isAdmin: isAdmin,

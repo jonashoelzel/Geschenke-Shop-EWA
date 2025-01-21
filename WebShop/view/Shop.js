@@ -1,4 +1,5 @@
 import { mapState, mapMutations } from 'vuex'
+import createAndAddProductsToBestellung from '../apis/create_bestellung_and_add_products.js';
 
 export default {
   name: 'Shop',
@@ -49,18 +50,12 @@ export default {
   methods: {
     ...mapMutations(['fetchArticles', 'onSearchQueryChange', 'addOneToCart'])
   },
-  mounted() {
+  async mounted() {
     // Check for payment status in URL
     const urlParams = new URLSearchParams(window.location.search);
     const paymentStatus = urlParams.get('payment');
     
-    if (paymentStatus === 'success') {
-      // Show success message and clear cart
-      this.$store.commit('clearCart');
-      alert('Payment successful!');
-    } else if (paymentStatus === 'cancelled') {
-      // Optionally show a message when payment is cancelled
-      const cart = urlParams.get('cart');
+    const cart = urlParams.get('cart');
       if (cart) {
         try {
           const cartMap = JSON.parse(decodeURIComponent(cart));
@@ -69,6 +64,18 @@ export default {
           console.error('Error restoring cart:', e);
         }
       }
+
+    const brutto_price =  this.$store.getters.getArticlesInCart.reduce((sum, article) => sum + article.amount * article.preis * (1 + this.$store.state.MwStSatz), 0);
+    const kundenID = this.user.id;
+    
+    if (paymentStatus === 'success') {
+      // Show success message and clear cart
+      const result = await createAndAddProductsToBestellung(kundenID, brutto_price, this.$store.getters.getArticlesInCart);
+      this.$store.commit('clearCart');
+      alert('Payment successful!');
+    } else if (paymentStatus === 'cancelled') {
+      // Optionally show a message when payment is cancelled
+      
       alert('Payment cancelled');
     }
     
