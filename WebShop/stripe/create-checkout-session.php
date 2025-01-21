@@ -25,7 +25,7 @@ try {
         'payment_method_types' => ['card'],
         'line_items' => $data['lineItems'],
         'mode' => 'payment',
-        'success_url' => $success_url,
+        'success_url' => $success_url . '&cart=' . $cartMap,
         'cancel_url' => $cancel_url . '&cart=' . $cartMap,
     ]);
 
