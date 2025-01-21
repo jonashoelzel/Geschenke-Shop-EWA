@@ -19,23 +19,23 @@ export default {
       </div>
 
       <!-- Registration Form -->
-      <div v-else>
-        <h2>Register</h2>
-        <form @submit.prevent="register">
-          <label>Username: <input v-model="registerForm.username" type="text" required></label><br>
-          <label>Email: <input v-model="registerForm.email" type="email" required></label><br>
-          <label>Password: <input v-model="registerForm.password" type="password" required></label><br>
-          <button type="submit">Register</button>
-        </form>
-
-        <!-- Login Form -->
-        <h2>Login</h2>
-        <form @submit.prevent="login">
-          <label>Email: <input v-model="loginForm.email" type="email" required></label><br>
-          <label>Password: <input v-model="loginForm.password" type="password" required></label><br>
-          <button type="submit">Login</button>
-        </form>
-      </div>
+            <div v-else>
+              <h2>Register</h2>
+              <form @submit.prevent="register">
+                <label>Username: <input v-model="registerForm.username" type="text" required minlength="3"></label><br>
+                <label>Email: <input v-model="registerForm.email" type="email" required></label><br>
+                <label>Password: <input v-model="registerForm.password" type="password" required minlength="5"></label><br>
+                <button type="submit">Register</button>
+              </form>
+      
+              <!-- Login Form -->
+              <h2>Login</h2>
+              <form @submit.prevent="login">
+                <label>Email: <input v-model="loginForm.email" type="email" required></label><br>
+                <label>Password: <input v-model="loginForm.password" type="password" required minlength="5"></label><br>
+                <button type="submit">Login</button>
+              </form>
+            </div>
     </div>
   `,
   data() {
@@ -64,6 +64,11 @@ export default {
           body: JSON.stringify(this.registerForm),
         });
 
+        if (response.status === 409) {
+          alert('Ein Benutzer mit dieser E-Mail-Adresse existiert bereits.');
+          return;
+        }
+
         const data = await response.json();
         console.log('Server response:', data);
 
@@ -90,6 +95,11 @@ export default {
           },
           body: JSON.stringify(this.loginForm),
         });
+
+        if (response.status === 401) {
+          alert('Ungültige E-Mailadresse oder Passwort eingegeben.');
+          return;
+        }
 
         const data = await response.json();
 

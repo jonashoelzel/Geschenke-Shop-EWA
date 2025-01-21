@@ -43,7 +43,7 @@ $passwordHash = password_hash($requestData['password'], PASSWORD_BCRYPT);
 // Überprüfen, ob die E-Mail bereits existiert
 $result = $conn->query("SELECT id FROM users WHERE email = '$email'");
 if ($result->num_rows > 0) {
-    http_response_code(400);
+    http_response_code(409); //Konflikt-Fehlercode
     echo json_encode(['error' => 'Ein Benutzer mit dieser E-Mail-Adresse existiert bereits.']);
     exit;
 }
