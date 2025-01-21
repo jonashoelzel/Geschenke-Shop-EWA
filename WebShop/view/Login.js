@@ -131,10 +131,13 @@ export default {
         }
 
         const user = {
+          kundenID: decodedToken.kundenID,
           username: decodedToken.username,
           email: decodedToken.email,
           isAdmin: isAdmin,
         };
+
+        console.log('User from token:', user);
 
         this.setUser(user);
       }

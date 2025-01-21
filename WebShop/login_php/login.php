@@ -55,7 +55,7 @@ if (!password_verify($password, $storedPasswordHash)) {
 }
 
 // Token generieren
-$token = generateToken(['username' => $user['username'], 'email' => $email, 'is_admin' => $user['is_admin']]);
+$token = generateToken(['kundenID' => $user['kundenID'], 'username' => $user['username'], 'email' => $email, 'is_admin' => $user['is_admin']]);
 
 header('Content-Type: application/json');
 echo json_encode(['token' => $token]);

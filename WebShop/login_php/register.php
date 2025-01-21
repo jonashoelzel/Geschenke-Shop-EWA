@@ -56,8 +56,11 @@ if (!$conn->query($query)) {
     exit;
 }
 
+// KundenID abrufen
+$kundenID = $conn->insert_id;
+
 // Token generieren
-$token = generateToken(['username' => $username, 'email' => $email, 'is_admin' => $is_admin]);
+$token = generateToken(['kundenID' => $kundenID, 'username' => $username, 'email' => $email, 'is_admin' => $is_admin]);
 
 header('Content-Type: application/json');
 echo json_encode(['token' => $token]);

@@ -32,9 +32,9 @@ if (!$user) {
 }
 
 // Adminrechte prüfen
-$email = $conn->real_escape_string($user['email']);
-$stmt = $conn->prepare("SELECT is_admin FROM kunde WHERE email = ?");
-$stmt->bind_param("s", $email);
+$kundenID = $conn->real_escape_string($user['kundenID']);
+$stmt = $conn->prepare("SELECT is_admin FROM kunde WHERE kundenID = ?");
+$stmt->bind_param("i", $kundenID);
 $stmt->execute();
 $result = $stmt->get_result();
 
