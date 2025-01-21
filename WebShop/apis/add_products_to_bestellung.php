@@ -48,6 +48,18 @@ foreach ($produkte as $produkt) {
         $conn->close();
         exit;
     }
+    // Update the product stock
+    $sql = "UPDATE produkt SET bestand = bestand - ? WHERE prodID = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ii", $menge, $prodID);
+
+    if (!$stmt->execute()) {
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Fehler beim Aktualisieren des Bestands.']);
+        $stmt->close();
+        $conn->close();
+        exit;
+    }
 
     $stmt->close();
 }
