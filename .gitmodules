@@ -1,0 +1,3 @@
+[submodule "WebShop/stripe/stripe-php"]
+	path = WebShop/stripe/stripe-php
+	url = https://github.com/stripe/stripe-php.git
