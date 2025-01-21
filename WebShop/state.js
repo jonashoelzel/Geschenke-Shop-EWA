@@ -56,6 +56,15 @@ const store = createStore({
                 state._articlesInCartMap.set(productID, state._articlesInCartMap.get(productID) - 1);
             }
         },
+        setCartFromURL(state, cartMap) {
+            state._articlesInCartMap.clear();
+            cartMap.forEach(([prodID, amount]) => {
+                state._articlesInCartMap.set(prodID, amount);
+            });
+        },
+        clearCart(state) {
+            state._articlesInCartMap.clear();
+        },
         setUser(state, user) {
             state.user = user;
         },

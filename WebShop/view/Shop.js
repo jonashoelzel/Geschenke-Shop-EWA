@@ -48,5 +48,33 @@ export default {
   },
   methods: {
     ...mapMutations(['fetchArticles', 'onSearchQueryChange', 'addOneToCart'])
+  },
+  mounted() {
+    // Check for payment status in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentStatus = urlParams.get('payment');
+    
+    if (paymentStatus === 'success') {
+      // Show success message and clear cart
+      this.$store.commit('clearCart');
+      alert('Payment successful!');
+    } else if (paymentStatus === 'cancelled') {
+      // Optionally show a message when payment is cancelled
+      const cart = urlParams.get('cart');
+      if (cart) {
+        try {
+          const cartMap = JSON.parse(decodeURIComponent(cart));
+          this.$store.commit('setCartFromURL', cartMap);
+        } catch (e) {
+          console.error('Error restoring cart:', e);
+        }
+      }
+      alert('Payment cancelled');
+    }
+    
+    // Clean up URL
+    if (paymentStatus) {
+      this.$router.replace(this.$route.path);
+    }
   }
 }

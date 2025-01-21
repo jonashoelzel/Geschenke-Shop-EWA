@@ -60,7 +60,7 @@ export default {
     `,
   
   computed: {
-    ...mapState(['MwStSatz']),
+    ...mapState(['MwStSatz', '_articlesInCartMap']),
     ...mapGetters(['getArticlesInCart']),
     sumNettoOfArticlesInCart() {
       return this.$store.getters.getArticlesInCart.reduce((sum, article) => sum + article.amount * article.preis, 0);
@@ -74,29 +74,48 @@ export default {
   },
   methods: {
     ...mapMutations(['addOneToCart', 'removeOneFromCart']),
-    payment() {
-      fetch('create_checkout_session.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          cart: this.articlesInCart
-        }),
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.id) {
-            const stripe = Stripe('pk_test_51QU6m7KaPZs8yxC8TyVsHez6Vg2jh0k9S3vKEcXKR1WxmlqWt109UItAYzHV4233UfzfMr5PtT9poQ8ZIBYpN5tx001X6LSdYJ');
-            stripe.redirectToCheckout({ sessionId: data.id });
-          } else {
-            alert('Fehler bei der Bezahlung: ' + data.error);
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('Fehler bei der Bezahlung.');
+    async payment() {
+      try {
+        // Create line items for Stripe
+        const lineItems = this.getArticlesInCart.map(article => ({
+          price_data: {
+            currency: 'eur',
+            product_data: {
+              name: article.titel,
+            },
+            unit_amount: Math.round(article.preis * 100), // Convert to cents
+          },
+          quantity: article.amount,
+        }));
+
+        // Create checkout session
+        const response = await fetch('./stripe/create-checkout-session.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            lineItems: lineItems,
+            cartMap: encodeURIComponent(JSON.stringify(Array.from(this._articlesInCartMap))),
+          }),
         });
+
+        if (response.error) {
+          // Handle any errors from Stripe
+          console.error('Stripe checkout error:', response.error);
+          return;
+        }
+
+        const { sessionId, redirect, error, error_description } = await response.json();
+
+        console.log(error, error_description);
+
+        // Redirect to Stripe Checkout
+        window.location.href = redirect;
+
+      } catch (error) {
+        console.error('Error creating checkout session:', error);
+      }
     }
   }
 }
