@@ -29,7 +29,7 @@ const store = createStore({
         },
         onSearchQueryChange(state, searchQuery) {
             state.articlesFiltered = state.articlesAll.filter(article =>
-                article.Produkttitel.toLowerCase().includes(searchQuery.toLowerCase())
+                article.titel.toLowerCase().includes(searchQuery.toLowerCase())
             );
         },
         addOneToCart(state, productID) {
