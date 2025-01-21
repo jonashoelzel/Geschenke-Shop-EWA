@@ -20,13 +20,14 @@ try {
     $data = json_decode($json, true);
 
     $cartMap = $data['cartMap'];
+    $user = $data['user'];
 
     $checkout_session = \Stripe\Checkout\Session::create([
         'payment_method_types' => ['card'],
         'line_items' => $data['lineItems'],
         'mode' => 'payment',
-        'success_url' => $success_url . '&cart=' . $cartMap,
-        'cancel_url' => $cancel_url . '&cart=' . $cartMap,
+        'success_url' => $success_url . '&cart=' . $cartMap . '&user=' . $user,
+        'cancel_url' => $cancel_url . '&cart=' . $cartMap . '&user=' . $user,
     ]);
 
     // Redirect to Stripe Checkout URL

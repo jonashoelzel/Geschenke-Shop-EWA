@@ -97,6 +97,7 @@ export default {
           body: JSON.stringify({
             lineItems: lineItems,
             cartMap: encodeURIComponent(JSON.stringify(Array.from(this._articlesInCartMap))),
+            user: encodeURIComponent(JSON.stringify(this.$store.state.user)),
           }),
         });
 

@@ -54,31 +54,35 @@ export default {
     // Check for payment status in URL
     const urlParams = new URLSearchParams(window.location.search);
     const paymentStatus = urlParams.get('payment');
-    
-    const cart = urlParams.get('cart');
-      if (cart) {
-        try {
-          const cartMap = JSON.parse(decodeURIComponent(cart));
-          this.$store.commit('setCartFromURL', cartMap);
-        } catch (e) {
-          console.error('Error restoring cart:', e);
-        }
-      }
 
-    const brutto_price =  this.$store.getters.getArticlesInCart.reduce((sum, article) => sum + article.amount * article.preis * (1 + this.$store.state.MwStSatz), 0);
-    const kundenID = this.user.id;
-    
+    const cart = urlParams.get('cart');
+    const user = urlParams.get('user');
+    if (cart) {
+      try {
+        const cartMap = JSON.parse(decodeURIComponent(cart));
+        this.$store.commit('setCartFromURL', cartMap);
+      } catch (e) {
+        console.error('Error restoring cart:', e);
+      }
+    }
+
+    if (user) {
+      this.$store.commit('setUser', JSON.parse(decodeURIComponent(user)));
+    }
+
+    const brutto_price = this.$store.getters.getArticlesInCart.reduce((sum, article) => sum + article.amount * article.preis * (1 + this.$store.state.MwStSatz), 0);
+
     if (paymentStatus === 'success') {
       // Show success message and clear cart
-      const result = await createAndAddProductsToBestellung(kundenID, brutto_price, this.$store.getters.getArticlesInCart);
+      const result = await createAndAddProductsToBestellung(this.user.id, brutto_price, this.$store.getters.getArticlesInCart);
       this.$store.commit('clearCart');
       alert('Payment successful!');
     } else if (paymentStatus === 'cancelled') {
       // Optionally show a message when payment is cancelled
-      
+
       alert('Payment cancelled');
     }
-    
+
     // Clean up URL
     if (paymentStatus) {
       this.$router.replace(this.$route.path);
