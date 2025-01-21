@@ -3,39 +3,53 @@ import { mapState, mapMutations } from 'vuex';
 export default {
   name: 'Login',
   template: String.raw`
-    <div>
-      <h1>Login</h1>
-
-      <!-- User Information -->
-      <div v-if="user">
-        <p>Welcome, {{ user.username }}!</p>
-        <button @click="logout">Logout</button>
-        <div v-if="user.isAdmin">
-          <button @click="goToAdminPage">Go to Admin Page</button>
-        </div>
-        <button @click="$router.push('/')">
-          <i class="fas fa-arrow-left"></i> Zurück zum Shop
-        </button>
-      </div>
-
-      <!-- Registration Form -->
-            <div v-else>
-              <h2>Register</h2>
-              <form @submit.prevent="register">
-                <label>Username: <input v-model="registerForm.username" type="text" required minlength="3"></label><br>
-                <label>Email: <input v-model="registerForm.email" type="email" required></label><br>
-                <label>Password: <input v-model="registerForm.password" type="password" required minlength="5"></label><br>
-                <button type="submit">Register</button>
-              </form>
-      
-              <!-- Login Form -->
-              <h2>Login</h2>
-              <form @submit.prevent="login">
-                <label>Email: <input v-model="loginForm.email" type="email" required></label><br>
-                <label>Password: <input v-model="loginForm.password" type="password" required minlength="5"></label><br>
-                <button type="submit">Login</button>
-              </form>
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Login</h2>
+          <form @submit.prevent="login">
+            <div class="form-group">
+              <label>Email:</label>
+              <input v-model="loginForm.email" type="email" class="form-control" required>
             </div>
+            <div class="form-group">
+              <label>Passwort:</label>
+              <input v-model="loginForm.password" type="password" class="form-control" required minlength="5">
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+          </form>
+        </div>
+        <div class="col-md-6">
+          <div v-if="user">
+            <h2>Welcome, {{ user.username }}!</h2>
+            <button @click="logout" class="btn btn-danger">Logout</button>
+            <div v-if="user.isAdmin" class="mt-3">
+              <button @click="goToAdminPage" class="btn btn-secondary">Go to Admin Page</button>
+            </div>
+            <button @click="$router.push('/')" class="btn btn-secondary mt-3">
+              <i class="fas fa-arrow-left"></i> Zurück zum Shop
+            </button>
+          </div>
+          <div v-else>
+            <h2>Registrieren</h2>
+            <form @submit.prevent="register">
+              <div class="form-group">
+                <label>Username:</label>
+                <input v-model="registerForm.username" type="text" class="form-control" required minlength="3">
+              </div>
+              <div class="form-group">
+                <label>Email:</label>
+                <input v-model="registerForm.email" type="email" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label>Passwort:</label>
+                <input v-model="registerForm.password" type="password" class="form-control" required minlength="5">
+              </div>
+              <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   `,
   data() {

@@ -5,20 +5,20 @@ import createAndAddProductsToBestellung from '../apis/create_bestellung_and_add_
 export default {
   name: 'Admin',
   template: String.raw`
-    <div>
-      <h1>Artikel Übersicht</h1>
-      <div v-for="article in articlesAll" :key="article.prodID" style="margin-bottom: 1em;">
-        <div>
-          <strong>{{ article.titel }}</strong><br>
-          Lagerbestand: {{ article.bestand }}
-        </div>
-        <div>
-          <button @click="decrement(article)">-</button>
-          <button @click="increment(article)">+</button>
+    <div class="container mt-5">
+      <h1 class="mb-4">Artikel Übersicht</h1>
+      <div v-for="article in articlesAll" :key="article.prodID" class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">{{ article.titel }}</h5>
+          <p class="card-text">Lagerbestand: {{ article.bestand }}</p>
+          <div class="btn-group" role="group">
+            <button @click="decrement(article)" class="btn btn-outline-secondary">-</button>
+            <button @click="increment(article)" class="btn btn-outline-secondary">+</button>
+          </div>
         </div>
       </div>
-      <button @click="confirmUpdate">Bestände bestätigen</button>
-      <button @click="createTestBestellung">Test Bestellung erstellen</button>
+      <button @click="confirmUpdate" class="btn btn-primary mt-3">Bestände bestätigen</button>
+      <button @click="createTestBestellung" class="btn btn-secondary mt-3">Test Bestellung erstellen</button>
     </div>
   `,
   computed: {

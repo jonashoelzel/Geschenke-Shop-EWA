@@ -4,38 +4,42 @@ import createAndAddProductsToBestellung from '../apis/create_bestellung_and_add_
 export default {
   name: 'Shop',
   template: String.raw`
-    <div>
-      <h1>Shop</h1>
-      <button v-if="isAdmin" class="cart-button" style="right: 250px;" @click="$router.push('/admin')">
-        <i class="fas fa-user-shield"></i> Admin
-      </button>
-      <button v-if="!user" class="cart-button" style="right: 150px;" @click="$router.push('/login')">
-        <i class="fas fa-sign-in-alt"></i> Login
-      </button>
-      <button v-else class="cart-button" style="right: 150px;" @click="logout">
-        <i class="fas fa-sign-out-alt"></i> Logout
-      </button>
-      <button class="cart-button" @click="$router.push('/shopping-cart')">
-        <i class="fas fa-shopping-cart"></i> Warenkorb
-      </button>
+    <div class="container mt-5">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Shop</h1>
+        <div>
+          <button v-if="isAdmin" class="btn btn-secondary mr-2" @click="$router.push('/admin')">
+            <i class="fas fa-user-shield"></i> Admin
+          </button>
+          <button v-if="!user" class="btn btn-primary mr-2" @click="$router.push('/login')">
+            <i class="fas fa-sign-in-alt"></i> Login
+          </button>
+          <button v-else class="btn btn-danger mr-2" @click="logout">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+          <button class="btn btn-info" @click="$router.push('/shopping-cart')">
+            <i class="fas fa-shopping-cart"></i> Warenkorb
+          </button>
+        </div>
+      </div>
       <!-- Search input field -->
-      <input type="text" v-model="searchQuery" placeholder="Suche nach Artikeln..."
-        style="margin-bottom: 1em; padding: 10px; width: 100%; max-width: 300px;"
-        @input="onSearchQueryChange(searchQuery)">
-      <div v-for="article in articlesFiltered" :key="article.prodID" style="margin-bottom: 1em;">
-        <div v-if="article.bestand >= 1">
-          <div>
-            <img :src="article.bild" style="width: 150px; height: 150px;">
-            <br>
-            <strong>{{ article.titel }}</strong><br>
-            {{ article.beschreibung }}<br>
-            Preis: {{ (Number(article.preis) * (1 + MwStSatz)).toFixed(2) }} €
-          </div>
-          <div>
-            <button @click="addOneToCart(article.prodID)"
-              style="background-color: #007bff; color: white; border: none; border-radius: 5px; padding: 10px 15px; cursor: pointer;">
-              Zum Warenkorb hinzufügen
-            </button>
+      <div class="input-group mb-3">
+        <input type="text" v-model="searchQuery" class="form-control" placeholder="Suche nach Artikeln..."
+          @input="onSearchQueryChange(searchQuery)">
+      </div>
+      <div class="row">
+        <div v-for="article in articlesFiltered" :key="article.prodID" class="col-md-4 mb-4">
+          <div class="card h-100">
+            <img :src="article.bild" class="card-img-top" alt="Artikelbild" style="height: 200px; object-fit: cover;">
+            <div class="card-body">
+              <h5 class="card-title">{{ article.titel }}</h5>
+              <p class="card-text">{{ article.beschreibung }}</p>
+              <p class="card-text"><strong>Preis: {{ (Number(article.preis) * (1 + MwStSatz)).toFixed(2) }} €</strong></p>
+              <button v-if="article.bestand >= 1" @click="addOneToCart(article.prodID)" class="btn btn-primary">
+                Zum Warenkorb hinzufügen
+              </button>
+              <p v-else class="text-danger">Nicht auf Lager</p>
+            </div>
           </div>
         </div>
       </div>
