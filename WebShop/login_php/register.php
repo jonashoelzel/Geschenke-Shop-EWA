@@ -41,7 +41,7 @@ $is_admin = 0;
 $passwordHash = password_hash($requestData['password'], PASSWORD_BCRYPT);
 
 // Überprüfen, ob die E-Mail bereits existiert
-$result = $conn->query("SELECT id FROM users WHERE email = '$email'");
+$result = $conn->query("SELECT kundenID FROM kunde WHERE email = '$email'");
 if ($result->num_rows > 0) {
     http_response_code(409); //Konflikt-Fehlercode
     echo json_encode(['error' => 'Ein Benutzer mit dieser E-Mail-Adresse existiert bereits.']);
@@ -49,7 +49,7 @@ if ($result->num_rows > 0) {
 }
 
 // Benutzer in die Datenbank eintragen
-$query = "INSERT INTO users (username, email, password, is_admin) VALUES ('$username', '$email', '$passwordHash', $is_admin)";
+$query = "INSERT INTO kunde (username, email, password, is_admin) VALUES ('$username', '$email', '$passwordHash', $is_admin)";
 if (!$conn->query($query)) {
     http_response_code(500);
     echo json_encode(['error' => 'Fehler beim Erstellen des Benutzers.']);
