@@ -60,7 +60,7 @@ export default {
     `,
   
   computed: {
-    ...mapState(['MwStSatz', '_articlesInCartMap']),
+    ...mapState(['MwStSatz', '_articlesInCartMap', 'user']),
     ...mapGetters(['getArticlesInCart']),
     sumNettoOfArticlesInCart() {
       return this.$store.getters.getArticlesInCart.reduce((sum, article) => sum + article.amount * article.preis, 0);
@@ -75,6 +75,11 @@ export default {
   methods: {
     ...mapMutations(['addOneToCart', 'removeOneFromCart']),
     async payment() {
+      if (!this.user) {
+        alert('Bitte loggen sie sich ein um ihre Bestellung abzuschließen.');
+        this.$router.push('/login');
+        return;
+      }
       try {
         // Create line items for Stripe
         const lineItems = this.getArticlesInCart.map(article => ({
