@@ -1,10 +1,10 @@
 import createBestellung from './create_bestellung.js';
 import addProductsToBestellung from './add_products_to_bestellung.js';
 
-async function createAndAddProductsToBestellung(kundenID, preis, produkte) {
+async function createAndAddProductsToBestellung(kundenID, produkte) {
     try {
         // Create the Bestellung
-        const bestellungResult = await createBestellung(kundenID, preis);
+        const bestellungResult = await createBestellung(kundenID);
         if (!bestellungResult || !bestellungResult.success) {
             throw new Error('Fehler beim Erstellen der Bestellung.');
         }

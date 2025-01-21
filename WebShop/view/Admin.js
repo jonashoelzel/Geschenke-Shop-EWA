@@ -45,7 +45,7 @@ export default {
       }
     },
     async createTestBestellung() {
-      const kundenID = 6; // Replace with actual customer ID
+      const kundenID = 2; // Replace with actual customer ID
       const preis = 100.00; // Replace with actual price
       const produkte = [
         { prodID: 1, menge: 2 },
@@ -53,7 +53,7 @@ export default {
       ];
 
       try {
-        const result = await createAndAddProductsToBestellung(kundenID, preis, produkte);
+        const result = await createAndAddProductsToBestellung(kundenID, produkte);
         if (result.success) {
           console.log('Bestellung erfolgreich erstellt und Produkte hinzugefügt:', result.bestellungID);
         } else {

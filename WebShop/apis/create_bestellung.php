@@ -18,19 +18,18 @@ if ($conn->connect_error) {
 $input = json_decode(file_get_contents('php://input'), true);
 
 // Eingabewerte validieren
-if (!isset($input['kundenID']) || !isset($input['preis'])) {
+if (!isset($input['kundenID'])) {
     http_response_code(400); // Fehlercode "Bad Request"
     echo json_encode(['success' => false, 'message' => 'Ungültige Eingabedaten.']);
     exit;
 }
 
 $kundenID = $input['kundenID'];
-$preis = $input['preis'];
 
 // Prepared statement to prevent SQL injection
-$sql = "INSERT INTO bestellung (datum, preis_ges, kunde_kundenID, bezahlt) VALUES (SYSDATE(), ?, ?, 1)";
+$sql = "INSERT INTO bestellung (datum, kunde_kundenID, bezahlt) VALUES (SYSDATE(), ?, 1)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("di", $preis, $kundenID);
+$stmt->bind_param("i", $kundenID);
 
 if ($stmt->execute()) {
     $bestellungID = $stmt->insert_id;

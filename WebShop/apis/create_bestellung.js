@@ -1,4 +1,4 @@
-async function createBestellung(kundenID, preis) {
+async function createBestellung(kundenID) {
     try {
         // Anfrage an die PHP-Datei senden
         const response = await fetch('./apis/create_bestellung.php', {
@@ -7,8 +7,7 @@ async function createBestellung(kundenID, preis) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                kundenID: kundenID,
-                preis: preis
+                kundenID: kundenID
             })
         });
 
