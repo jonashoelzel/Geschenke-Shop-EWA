@@ -25,6 +25,10 @@ try {
     $checkout_session = \Stripe\Checkout\Session::create([
         'payment_method_types' => ['card'],
         'line_items' => $data['lineItems'],
+        'shipping_address_collection' => [
+            'allowed_countries' => ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE'], // Allow all EU countries
+        ],
+        'billing_address_collection' => 'required',
         'mode' => 'payment',
         'success_url' => $success_url . '&cart=' . $cartMap . '&user=' . $user,
         'cancel_url' => $cancel_url . '&cart=' . $cartMap . '&user=' . $user,
