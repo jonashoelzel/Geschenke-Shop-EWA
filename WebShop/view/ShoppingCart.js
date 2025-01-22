@@ -3,7 +3,7 @@ import { mapMutations, mapGetters, mapState } from 'vuex';
 export default {
   name: 'ShoppingCart',
   template: String.raw`
-     <div class="container mt-5">
+    <div class="container mt-5">
       <button class="btn btn-secondary mb-3" @click="$router.push('/')">
         <i class="fas fa-arrow-left"></i> Zurück zum Shop
       </button>
@@ -42,13 +42,12 @@ export default {
         </tbody>
       </table>
       <div class="text-center mt-4">
-        <button class="btn btn-primary" @click="payment">
+        <button v-if="getArticlesInCart.length > 0" class="btn btn-primary" @click="payment">
           Bezahlen
         </button>
       </div>
     </div>
-    `,
-  
+  `,
   computed: {
     ...mapState(['MwStSatz', '_articlesInCartMap', 'user']),
     ...mapGetters(['getArticlesInCart']),
@@ -114,4 +113,4 @@ export default {
       }
     }
   }
-}
+};
