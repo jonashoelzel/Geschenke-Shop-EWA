@@ -59,6 +59,7 @@ export default {
   `,
   created() {
     this.fetchArticles();
+    this.setUserFromToken();
   },
   computed: {
     ...mapState(['articlesFiltered', 'user', 'MwStSatz']),
@@ -68,7 +69,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['fetchArticles', 'onSearchQueryChange', 'addOneToCart', 'removeOneFromCart', 'clearUser']),
+    ...mapMutations(['fetchArticles', 'onSearchQueryChange', 'addOneToCart', 'removeOneFromCart', 'clearUser', 'setUser']),
     logout() {
       localStorage.removeItem('token');
       this.clearUser();
@@ -80,7 +81,35 @@ export default {
     getCartAmount(prodID) {
       const article = this.getArticlesInCart.find(article => article.prodID === prodID);
       return article ? article.amount : 0;
-    }
+    },
+    setUserFromToken() {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const decodedToken = this.parseJwt(token);
+        let isAdmin = false;
+
+        if (decodedToken.is_admin === 1 || decodedToken.is_admin === true) {
+          isAdmin = true;
+        }
+
+        const user = {
+          id: decodedToken.kundenID,
+          username: decodedToken.username,
+          email: decodedToken.email,
+          isAdmin: isAdmin,
+        };
+
+        console.log('User from token:', user);
+
+        this.setUser(user);
+      }
+    },
+    parseJwt(token) {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+      return JSON.parse(jsonPayload);
+    },
   },
   async mounted() {
     // Check for payment status in URL
