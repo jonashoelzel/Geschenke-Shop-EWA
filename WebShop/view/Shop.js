@@ -1,4 +1,4 @@
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapGetters } from 'vuex';
 import createAndAddProductsToBestellung from '../apis/create_bestellung_and_add_products.js';
 
 export default {
@@ -35,9 +35,21 @@ export default {
               <h5 class="card-title">{{ article.titel }}</h5>
               <p class="card-text">{{ article.beschreibung }}</p>
               <p class="card-text"><strong>Preis: {{ (Number(article.preis) * (1 + MwStSatz)).toFixed(2) }} €</strong></p>
-              <button v-if="article.bestand >= 1" @click="addOneToCart(article.prodID)" class="btn btn-primary">
-                Zum Warenkorb hinzufügen
-              </button>
+              <div v-if="article.bestand >= 1">
+                <div v-if="isInCart(article.prodID)">
+                  <div class="btn-group" role="group">
+                    <button @click="removeOneFromCart(article.prodID)" class="btn btn-outline-secondary">
+                      <template v-if="getCartAmount(article.prodID) > 1">-</template>
+                      <template v-else><i class="fas fa-trash"></i></template>
+                    </button>
+                    <span class="btn btn-outline-secondary">{{ getCartAmount(article.prodID) }}</span>
+                    <button @click="addOneToCart(article.prodID)" class="btn btn-outline-secondary">+</button>
+                  </div>
+                </div>
+                <button v-else @click="addOneToCart(article.prodID)" class="btn btn-primary">
+                  Zum Warenkorb hinzufügen
+                </button>
+              </div>
               <p v-else class="text-danger">Nicht auf Lager</p>
             </div>
           </div>
@@ -50,16 +62,24 @@ export default {
   },
   computed: {
     ...mapState(['articlesFiltered', 'user', 'MwStSatz']),
+    ...mapGetters(['getArticlesInCart']),
     isAdmin() {
       return this.user && this.user.isAdmin;
     }
   },
   methods: {
-    ...mapMutations(['fetchArticles', 'onSearchQueryChange', 'addOneToCart', 'clearUser']),
+    ...mapMutations(['fetchArticles', 'onSearchQueryChange', 'addOneToCart', 'removeOneFromCart', 'clearUser']),
     logout() {
       localStorage.removeItem('token');
       this.clearUser();
       this.$router.push('/login');
+    },
+    isInCart(prodID) {
+      return this.getArticlesInCart.some(article => article.prodID === prodID);
+    },
+    getCartAmount(prodID) {
+      const article = this.getArticlesInCart.find(article => article.prodID === prodID);
+      return article ? article.amount : 0;
     }
   },
   async mounted() {
@@ -81,7 +101,7 @@ export default {
     if (user) {
       this.$store.commit('setUser', JSON.parse(decodeURIComponent(user)));
     }
-    
+
     if (paymentStatus === 'success') {
       const cartProdukte = Array.from(this.$store.state._articlesInCartMap.entries()).map(([prodID, menge]) => ({ prodID, menge }));
 
